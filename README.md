@@ -68,7 +68,8 @@ You can customize the behavior of the ftp-mount.service script by modifying the 
 - `FTP_PORT`: The port number of the FTP server. Modify this variable if your FTP server uses a different port. The default value is set to 20021.
 - `FTP_USER`: The FTP username. Replace the default value with the username required to access your FTP server.
 - `FTP_PASS`: The FTP password. Set this variable to the password associated with the FTP username specified in the FTP_USER variable.
-- `SAVE_FILES`: Set this variable to true or false to enable or disable saving files to disk. If set to true, files will be saved from the mounted FTP server to the directory specified in the - - - - `DESTINATION_DIR` variable. If set to false, files will not be saved locally. The default value is true.
+- `SAVE_FILES`: Set this variable to true or false to enable or disable saving files to disk. If set to true, files will be saved from the mounted FTP server to the directory specified in the
+- `DESTINATION_DIR` variable. If set to false, files will not be saved locally. The default value is true.
 - `DESTINATION_DIR`: The directory where files will be saved if the SAVE_FILES variable is set to true. Set this variable to the desired destination directory path on your system.
 
 After modifying the variables, save the changes to the ftp-mount.sh script before running the ftp-mount.service script.
