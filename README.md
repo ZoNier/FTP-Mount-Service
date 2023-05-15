@@ -1,75 +1,53 @@
 # FTP Mount Service
-
-This is the README file for the `ftp-mount.service` script.
-
-## Description
-
-The `ftp-mount.service` script is a systemd service unit that mounts an FTP server using `curlftpfs`. It allows you to access files on the FTP server as if they were stored locally. Additionally, it provides the option to save files from the mounted FTP server to a specified destination directory on your system.
+This service automates the process of mounting an FTP server using `curlftpfs` and optionally saving files to disk using `rsync`. It can be used to mount an FTP server and perform additional actions as needed.
 
 ## Prerequisites
-
-Before using this script, make sure you have the following prerequisites:
-
-- Systemd (for managing services)
-- Bash (for running the script)
-- `curlftpfs` (for mounting the FTP server)
-- `rsync` (optional - for saving files to disk)
+- Linux-based operating system with systemd
+- `curlftpfs` and `rsync` packages installed
 
 ## Installation
-
-To install and configure the `ftp-mount.service` script, follow these steps:
-
-1. Clone the repository or download the `ftp-mount.service` and `ftp-mount.sh` files to a directory of your choice (e.g., `/opt/ftp-mount`).
-2. Open the `ftp-mount.service` file and modify the `Description` and other parameters if needed.
-3. Open the `ftp-mount.sh` file and set the appropriate values for the variables at the beginning of the script:
-
-    - `MOUNT_POINT`: The local directory where the FTP server will be mounted.
-    - `FTP_SERVER`: The IP address or hostname of the FTP server.
-    - `FTP_PORT`: The port number of the FTP server.
-    - `FTP_USER`: The FTP username.
-    - `FTP_PASS`: The FTP password.
-    - `SAVE_FILES`: Set to `true` or `false` to enable or disable saving files to disk.
-    - `DESTINATION_DIR`: The directory where files will be saved if `SAVE_FILES` is set to `true`.
-
-4. Save the changes.
+1. Clone this repository or download the `ftp-mount.sh` script.
+   ```bash
+   git clone https://github.com/ZoNier/ftp-mount-service.git
+   ```
+2. Copy the `ftp-mount.sh` script to the desired location (e.g., `/opt/`).
+   ```bash
+   cp ftp-mount.sh /opt/
+   ```
+3. Customize the script by modifying the variables in the `ftp-mount.sh` file according to your FTP server settings and desired options.
+   - `MOUNT_POINT`: The directory where the FTP server will be mounted.
+   - `FTP_SERVER`: The IP address or hostname of the FTP server.
+   - `FTP_PORT`: The port number of the FTP server.
+   - `FTP_USER`: The FTP username.
+   - `FTP_PASS`: The FTP password.
+   - `SAVE_FILES`: Set to `true` or `false` to enable or disable saving files to disk.
+   - `DESTINATION_DIR`: The path to the directory where files will be saved (applicable only if `SAVE_FILES` is set to `true`).
+4. Copy the `ftp-mount.service` file to the systemd service directory.
+   ```bash
+   sudo cp ftp-mount.service /etc/systemd/system/
+   ```
+5. Reload the systemd daemon.
+   ```bash
+   sudo systemctl daemon-reload
+   ```
+6. Start the FTP Mount Service.
+   ```bash
+   sudo systemctl start ftp-mount.service
+   ```
+7. (Optional) Enable automatic startup of the FTP Mount Service on system boot.
+   ```bash
+   sudo systemctl enable ftp-mount.service
+   ```
 
 ## Usage
+The FTP Mount Service will automatically mount the FTP server specified in the `ftp-mount.sh` script and perform additional actions according to the configuration.
+By default, the service will attempt to mount the FTP server and wait for the mount process to complete. If the mount is successful, it will print a success message and proceed to the next steps.
+If the `SAVE_FILES` variable is set to `true`, the service will save files from the mounted FTP server to the specified `DESTINATION_DIR` using `rsync`.
+If the `SAVE_FILES` variable is set to `false`, the service will skip the file-saving step and directly unmount the FTP server.
+You can monitor the service logs using the following command:
+```bash
+sudo journalctl -u ftp-mount.service
+```
 
-To use the `ftp-mount.service` script, follow these steps:
-
-1. Make sure the `ftp-mount.service` and `ftp-mount.sh` files are in the same directory (e.g., `/opt/ftp-mount`).
-2. Open a terminal and navigate to the directory where the files are located.
-3. Run the following command to start the FTP mount service:
-
-   ```bash
-   sudo systemctl start ftp-mount
-   ```
-
-   This will mount the FTP server using the specified parameters in the `ftp-mount.sh` script.
-
-4. Wait for the mount process to complete. The script will periodically check if the mount is successful. If it fails, an error message will be displayed.
-
-5. If the `SAVE_FILES` variable is set to `true`, the script will save files from the mounted FTP server to the specified `DESTINATION_DIR`. This can be useful for backing up or synchronizing files between the FTP server and your local system. If the save operation is successful, a success message will be displayed. If it fails, an error message will be displayed.
-
-6. To unmount the FTP server, run the following command:
-
-   ```bash
-   sudo systemctl stop ftp-mount
-   ```
-
-   This will unmount the FTP server and clean up the mount point.
-
-## Configuration
-
-You can customize the behavior of the ftp-mount.service script by modifying the following parameters in the ftp-mount.sh script:
-
-- `MOUNT_POINT`: The local directory where the FTP server will be mounted. Set this variable to the desired mount point path on your system.
-- `FTP_SERVER`: The IP address or hostname of the FTP server. Replace the default value with the IP address or hostname of your FTP server.
-- `FTP_PORT`: The port number of the FTP server. Modify this variable if your FTP server uses a different port. The default value is set to 20021.
-- `FTP_USER`: The FTP username. Replace the default value with the username required to access your FTP server.
-- `FTP_PASS`: The FTP password. Set this variable to the password associated with the FTP username specified in the FTP_USER variable.
-- `SAVE_FILES`: Set this variable to true or false to enable or disable saving files to disk. If set to true, files will be saved from the mounted FTP server to the directory specified in the
-- `DESTINATION_DIR` variable. If set to false, files will not be saved locally. The default value is true.
-- `DESTINATION_DIR`: The directory where files will be saved if the SAVE_FILES variable is set to true. Set this variable to the desired destination directory path on your system.
-
-After modifying the variables, save the changes to the ftp-mount.sh script before running the ftp-mount.service script.
+## License
+This project is licensed under the [MIT License](LICENSE).
