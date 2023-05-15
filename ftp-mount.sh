@@ -59,12 +59,14 @@ if [[ "${SAVE_FILES}" == true ]]; then
     fi
 fi
 
-# Unmount FTP server
-if umount "${MOUNT_POINT}"; then
-    echo "FTP server unmounted successfully."
-else
-    echo "Failed to unmount FTP server."
-    exit 1
+# Unmount FTP server if SAVE_FILES is true
+if [[ "${SAVE_FILES}" == true ]]; then
+    if umount "${MOUNT_POINT}"; then
+        echo "FTP server unmounted successfully."
+    else
+        echo "Failed to unmount FTP server."
+        exit 1
+    fi
 fi
 
 exit 0
